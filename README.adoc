@@ -1,0 +1,67 @@
+= Sentinel-fwlogs - Firewall logs collector
+CZ.NIC z.s.p.o. <packaging@turris.cz>
+v1.0, 2020-08-18
+:icons:
+
+Rejected and dropped connections on firewall are interesting for multiple reasons.
+Ports scans, random connection attempts and more can be detected thanks to them.
+All that is thanks to common default policy to drop or reject in default on
+interfaces connected to the Internet. Collecting logs is then light and in the
+same time powerful way to detect attempted attacks.
+
+Sentinel-fwlogs uses Netlink to receive logs directly from kernel (it uses in
+reality
+https://www.netfilter.org/projects/libnetfilter_log/index.html[libnetfilter_log]).
+It parses packets and reports to Sentinel network:
+
+* protocol (UDP, TCP and so on)
+* source and destination IP address
+* source and destination port
+* time stamp of packet retrieval
+
+This info is submitted to Sentinel-proxy and trough it to Sentinel network.
+
+
+== Compilation
+
+To compile this library you have to run:
+
+----
+ ./bootstrap
+ ./configure
+ make
+----
+
+Subsequent installation can be done with `make install`.
+
+
+== Usage
+
+
+
+== Running tests
+
+Base64C contains basic tests in directory tests. To run all tests you can just simply
+run:
+
+----
+ make check
+----
+
+You can also run tests with Valgrind:
+
+----
+ make check-valgrind
+----
+
+To run checks with just one specific Valgrind test such as memtest you can run:
+
+----
+ make check-valgrind-memcheck
+----
+
+Source code of project can be also linted with cppcheck by running:
+
+----
+ make lint
+----
