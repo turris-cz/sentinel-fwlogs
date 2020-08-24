@@ -1,6 +1,8 @@
 # Outputs
 *.o
+/protocol2str.c
 sentinel-fwlogs
+fwrecorder
 
 # Test outputs
 tests/unittests

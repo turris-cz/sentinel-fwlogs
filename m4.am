@@ -1,0 +1,13 @@
+m4_V = $(m4_V_@AM_V@)
+m4_V_ = $(m4_V_@AM_DEFAULT_V@)
+m4_V_0 = @echo "  M4       $@";
+
+%.c: %.c.m4
+	$(m4_V)m4 '$<' >'$@'
+
+CLEANFILES = $(m4_files)
+
+.PHONY: gen-m4
+gen-m4: $(m4_files)
+
+# vim: ft=automake

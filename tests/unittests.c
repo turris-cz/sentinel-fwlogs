@@ -22,11 +22,15 @@
 #include <stdlib.h>
 
 
-int main(void) {
-	Suite *suite = suite_create("sentinel-fwlogs");
+Suite *suite_parser();
 
-	SRunner *runner = srunner_create(suite);
-	srunner_set_tap(runner, "/dev/stdout");
+
+int main(void) {
+	SRunner *runner = srunner_create(suite_parser());
+
+	char *test_output_tap = getenv("TEST_OUTPUT_TAP");
+	if (test_output_tap && !strcmp(test_output_tap, "y"))
+		srunner_set_tap(runner, "/dev/stdout");
 	if (getenv("VALGRIND")) // Do not fork with valgrind
 		srunner_set_fork_status(runner, CK_NOFORK);
 

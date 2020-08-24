@@ -24,19 +24,47 @@ This info is submitted to Sentinel-proxy and trough it to Sentinel network.
 
 == Compilation
 
-To compile this library you have to run:
+To compile you have to run:
 
 ----
- ./bootstrap
  ./configure
  make
 ----
 
 Subsequent installation can be done with `make install`.
 
+When you do not use distribution archive then you have to run initially
+`./bootstrap`.
+
 
 == Usage
 
+`sentinel-fwlogs` accesses packets logged by kernel firewall with target `NFLOG`.
+It receives them from kernel trough Netfilter (Netlink socket). `sentinel-fwlogs`
+receives only minimal header to identify protocol, source and destination IP and
+if it applies also source and destination ports.
+
+To allow `sentinel-fwlogs` access to Netfilter you have to either run it as root
+or you have to assign `sentinel-fwlogs` executable capability `CAP_NET_ADMIN`
+(`setcap cap_net_admin+ep sentinel-fwlogs`).
+
+Logs are directed to `sentinel-fwlogs` with target `NFLOG` and matching group.
+Default expected Netfilter group is `1914` but you can change that in compilation
+time (using configure variable `defnfgroup`) as well as when launching
+`sentinel-fwlogs` by using argument ``-g``/``--nflog-group``. In case of iptables
+rule to log packet can be for example:
+
+----
+ iptables -A rejected -j NFLOG --nflog-group 1914
+----
+
+Always make sure to specify `--nflog-group` as default one is `0`. Also think
+about setting `--nflog-threshold` to some higher but reasonable number (for
+example 32) if you want to decrease performance overhead.
+
+`sentinel-fwlogs` sends parsed info about packet to Sentinel Proxy. This means
+that it has to be running and be configured to correctly submit packet info to
+Sentinel network.
 
 
 == Running tests
@@ -65,3 +93,25 @@ Source code of project can be also linted with cppcheck by running:
 ----
  make lint
 ----
+
+There is also possibility to generate code coverage for test cases. To do so you
+can run:
+
+----
+ make check-code-coverage
+----
+
+=== Usage of fwrecoder
+
+`fwrecorder` is intended to be used to record real packets for use in tests. Usage
+is pretty much the same as in case of `sentinel-fwlogs` regarding NFLOG.
+
+Once started it records all packets send to NFLOG with appropriate group to files
+in current working directory. Every packet is recorded in separate file. File
+names are generated in sequence from template `fwrecorder-%d.packet` where `%d` is
+sequence number starting with zero and incremented with every received packet.
+Packets are written to files as raw data.
+
+To use them in tests you can use  the`xxd` utility provided by `vim`. Just run
+`xxd -i fwrecorded-XX.packet` to get C array with packet data (of course replace
+`XX` with appropriate number of packet you wish to use).

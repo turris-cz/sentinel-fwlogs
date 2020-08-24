@@ -1,0 +1,41 @@
+# This file is used to generate code for traslation of protocol to plain text name
+# You can use # to comment. Empty lines are ignored. Enything else is considered
+# as protocol name. There has to be valid symbol/define IPPROTO_${NAME}.
+
+### Source for these is header file netinet/in.h from GLibC
+## Standard well-defined IP protocols
+# IP		# Dummy protocol for TCP. # This is intentionally ignored
+ICMP		# Internet Control Message Protocol.
+IGMP		# Internet Group Management Protocol.
+IPIP		# IPIP tunnels (older KA9Q tunnels use 94).
+TCP			# Transmission Control Protocol.
+EGP			# Exterior Gateway Protocol.
+PUP			# PUP protocol.
+UDP			# User Datagram Protocol.
+IDP			# XNS IDP protocol.
+TP			# SO Transport Protocol Class 4.
+DCCP		# Datagram Congestion Control Protocol.
+IPV6		# IPv6 header.
+RSVP		# Reservation Protocol.
+GRE			# General Routing Encapsulation.
+ESP			# encapsulating security payload.
+AH			# authentication header.
+MTP			# Multicast Transport Protocol.
+BEETPH		# IP option pseudo header for BEET.
+ENCAP		# Encapsulation Header.
+PIM			# Protocol Independent Multicast.
+COMP		# Compression Header Protocol.
+SCTP		# Stream Control Transmission Protocol.
+UDPLITE		# UDP-Lite protocol.
+MPLS		# MPLS in IP.
+ETHERNET	# Ethernet-within-IPv6 Encapsulation.
+RAW			# Raw IP packets.
+MPTCP		# Multipath TCP connection.
+## IPV6 extension headers
+HOPOPTS		# IPv6 hop-by-hop options
+ROUTING		# IPv6 routing header
+FRAGMENT	# IPv6 fragmentation header
+ICMPV6		# ICMPv6
+NONE		# IPv6 no next header
+DSTOPTS		# IPv6 destination options
+MH			# IPv6 mobility header

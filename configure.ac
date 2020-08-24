@@ -10,13 +10,42 @@ AC_GNU_SOURCE
 
 PKG_CHECK_MODULES([czmq], [libczmq])
 PKG_CHECK_MODULES([msgpack], [msgpack])
-PKG_CHECK_MODULES([logc], [logc])
+PKG_CHECK_MODULES([logc], [logc logc_argp])
+PKG_CHECK_MODULES([libconfig], [libconfig])
+PKG_CHECK_MODULES([libnetfilter_log], [libnetfilter_log])
 AC_LINK_IFELSE(
   [AC_LANG_PROGRAM([#include <argp.h>],[argp_parse(0,1,NULL,0,0,0);])],,
   [argp_standalone_required="yes"]
 )
 AS_IF([test "$argp_standalone_required" = "yes"],
   AC_CHECK_LIB([argp], [argp_parse], , AC_MSG_ERROR([Unable to find libargp])))
+
+dnl Options from environment
+AC_ARG_VAR([defconfig], [Default path to the configuration file])
+AS_IF([test -z "${defconfig}"], [defconfig="/etc/sentinel/fwlogs.cfg"])
+AC_DEFINE_UNQUOTED([DEFAULT_CONFIG_FILE], ["${defconfig}"],
+  [Default path to the configuration file])
+
+AC_ARG_VAR([defsocket], [Default URI to Sentinel Proxy socket])
+AS_IF([test -z "${defsocket}"], [defsocket="ipc:///tmp/sentinel_pull.sock"])
+AC_DEFINE_UNQUOTED([DEFAULT_SOCKET_URI], ["${defsocket}"],
+  [Default URI to Sentinel Proxy socket])
+
+AC_ARG_VAR([deftopic], [Default topic used to submit data (you probably do not want to change this.])
+AS_IF([test -z "${deftopic}"], [deftopic="sentinel/collect/fwlogs"])
+AC_DEFINE_UNQUOTED([DEFAULT_TOPIC], ["${deftopic}"],
+  [Default topic uised to submit data])
+
+AC_ARG_VAR([defnfgroup], [Default Netfilter log group])
+AS_IF([test -z "${defnfgroup}"], [defnfgroup="1914"])
+AC_DEFINE_UNQUOTED([DEFAULT_NFLOG_GROUP], [(${defnfgroup})],
+  [Default Netfilter log group])
+
+
+dnl Options
+AC_ARG_ENABLE([fwrecorder],
+  AS_HELP_STRING([--enable-fwrecorder], [Enable firewall packets recorder]))
+AM_CONDITIONAL(FWRECORDER, [test "x$enable_fwrecorder" = "xyes"])
 
 
 dnl Tests
