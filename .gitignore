@@ -3,12 +3,20 @@
 /protocol2str.c
 sentinel-fwlogs
 fwrecorder
+sentinel-fwlogs-*.tar.gz
+sentinel-fwlogs-*.zip
 
 # Test outputs
 tests/unittests
 test-suite*.log
 tests/*.log
 tests/*.trs
+
+# Coveratge output
+*.gcno
+*.gcda
+*-coverage
+*-coverage.info
 
 ## Autotools
 /m4

@@ -22,6 +22,28 @@ It parses packets and reports to Sentinel network:
 This info is submitted to Sentinel-proxy and trough it to Sentinel network.
 
 
+== Dependencies
+
+* https://github.com/zeromq/libzmq[libczmq]
+* https://github.com/msgpack/msgpack-c[msgpack]
+* https://gitlab.nic.cz/turris/logc[logc]
+* http://www.hyperrealm.com/libconfig/libconfig.html[libconfig]
+* https://www.netfilter.org/projects/libnetfilter_log[libnetfilter_log]
+* On non-glibc http://www.lysator.liu.se/~nisse/misc[argp-standalone]
+
+For bootstrap (not release tarballs):
+
+* autotools
+* autoconf-archive
+
+For tests:
+
+* https://libcheck.github.io/check[check]
+* Optionally http://www.valgrind.org[valgrind]
+* For linting https://github.com/danmar/cppcheck[cppcheck]
+* For coverage http://ltp.sourceforge.net/coverage/lcov.php[lcov]
+
+
 == Compilation
 
 To compile you have to run:
@@ -37,7 +59,7 @@ When you do not use distribution archive then you have to run initially
 `./bootstrap`.
 
 
-== Usage
+== Usage (sentinel-fwlogs)
 
 `sentinel-fwlogs` accesses packets logged by kernel firewall with target `NFLOG`.
 It receives them from kernel trough Netfilter (Netlink socket). `sentinel-fwlogs`

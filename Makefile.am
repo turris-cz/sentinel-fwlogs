@@ -16,13 +16,15 @@ sentinel_fwlogs_CFLAGS = \
 	${msgpack_CFLAGS} \
 	${libconfig_CFLAGS} \
 	${logc_CFLAGS} \
-	${libnetfilter_log_CFLAGS}
+	${libnetfilter_log_CFLAGS} \
+	${CODE_COVERAGE_CFLAGS}
 sentinel_fwlogs_LDADD = \
 	${czmq_LIBS} \
 	${msgpack_LIBS} \
 	${libconfig_LIBS} \
 	${logc_LIBS} \
-	${libnetfilter_log_LIBS}
+	${libnetfilter_log_LIBS} \
+	${CODE_COVERAGE_LIBS}
 
 m4_files = protocol2str.c
 $(sentinel_fwlogs_OBJECTS): $(m4_files)
@@ -40,11 +42,16 @@ fwrecorder_SOURCES = \
 
 fwrecorder_CFLAGS = \
 	${logc_CFLAGS} \
-	${libnetfilter_log_CFLAGS}
+	${libnetfilter_log_CFLAGS} \
+	${CODE_COVERAGE_CFLAGS}
 fwrecorder_LDADD = \
 	${logc_LIBS} \
-	${libnetfilter_log_LIBS}
+	${libnetfilter_log_LIBS} \
+	${CODE_COVERAGE_LIBS}
 endif
+
+
+DIST_TARGETS := dist-gzip dist-zip
 
 
 linted_files = $(sentinel_fwlogs_SOURCES) $(fwrecorder_SOURCES)
