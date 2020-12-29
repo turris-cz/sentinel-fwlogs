@@ -51,9 +51,6 @@ fwrecorder_LDADD = \
 endif
 
 
-DIST_TARGETS := dist-gzip dist-zip
-
-
 linted_files = $(sentinel_fwlogs_SOURCES) $(fwrecorder_SOURCES)
 include $(srcdir)/lint.am
 

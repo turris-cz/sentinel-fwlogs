@@ -20,6 +20,7 @@
  */
 #include <check.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 
 Suite *suite_parser();
@@ -41,5 +42,5 @@ int main(void) {
 	int failed = srunner_ntests_failed(runner);
 
 	srunner_free(runner);
-	return !!failed;
+	return (bool)failed;
 }

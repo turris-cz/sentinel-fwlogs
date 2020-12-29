@@ -1,8 +1,12 @@
 AC_INIT([sentinel-fwlogs], [0.1.0], [tech.support@turris.cz])
-AC_CONFIG_MACRO_DIRS([m4])
-AC_CONFIG_AUX_DIR([aux])
+AC_CONFIG_MACRO_DIRS([.m4])
+AC_CONFIG_AUX_DIR([.aux])
 
-AM_INIT_AUTOMAKE([foreign silent-rules subdir-objects -Wall -Wno-portability])
+AM_INIT_AUTOMAKE([
+  foreign silent-rules subdir-objects
+  -Wall -Wno-portability
+  dist-zip dist-xz
+])
 AM_SILENT_RULES([yes])
 
 AC_PROG_CC
@@ -49,7 +53,7 @@ AM_CONDITIONAL(FWRECORDER, [test "x$enable_fwrecorder" = "xyes"])
 
 
 dnl Tests
-AC_ARG_ENABLE([tests], AC_HELP_STRING([--enable-tests], [Enable tests]))
+AC_ARG_ENABLE([tests], AC_HELP_STRING([--enable-tests], [Whether to enable unit tests]))
 AM_CONDITIONAL([ENABLE_TESTS], [test "x$enable_tests" = "xyes"])
 AS_IF([test "x$enable_tests" = "xyes"], [
   PKG_CHECK_MODULES([CHECK], [check >= 0.11])
@@ -58,8 +62,8 @@ AS_IF([test "x$enable_tests" = "xyes"], [
 AX_VALGRIND_CHECK
 
 dnl Linters
-AC_ARG_ENABLE([linters], AC_HELP_STRING([--enable-linters], [Disable linters (cppcheck and luacheck)]))
-AM_CONDITIONAL([ENABLE_TESTS], [test "x$enable_linters" = "xyes"])
+AC_ARG_ENABLE([linters], AC_HELP_STRING([--enable-linters], [Whether to enable code linting support (cppcheck)]))
+AM_CONDITIONAL([ENABLE_LINTERS], [test "x$enable_linters" = "xyes"])
 AS_IF([test "x$enable_linters" = "xyes"], [
   AC_PATH_PROG([CPPCHECK], [cppcheck])
 ])

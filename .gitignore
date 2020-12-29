@@ -4,10 +4,11 @@
 sentinel-fwlogs
 fwrecorder
 sentinel-fwlogs-*.tar.gz
+sentinel-fwlogs-*.tar.xz
 sentinel-fwlogs-*.zip
 
 # Test outputs
-tests/unittests
+/tests/unittests
 test-suite*.log
 tests/*.log
 tests/*.trs
@@ -15,8 +16,7 @@ tests/*.trs
 # Coveratge output
 *.gcno
 *.gcda
-*-coverage
-*-coverage.info
+/sentinel-fwlogs-*-coverage*
 
 ## Autotools
 /m4
