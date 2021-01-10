@@ -28,9 +28,9 @@ dist:
   artifacts:
     expire_in: 1 month
     paths:
-      - logc-*.tar.gz
-      - logc-*.tar.xz
-      - logc-*.zip
+      - sentinel-fwlogs-*.tar.gz
+      - sentinel-fwlogs-*.tar.xz
+      - sentinel-fwlogs-*.zip
 
 ## Test stage ####################################################################
 .test:
