@@ -1,4 +1,4 @@
-# Outputs
+#u Outputs
 *.o
 /protocol2str.c
 sentinel-fwlogs
@@ -19,8 +19,8 @@ tests/*.trs
 /sentinel-fwlogs-*-coverage*
 
 ## Autotools
-/m4
-/aux
+/.m4
+/.aux
 # http://www.gnu.org/software/automake
 Makefile
 Makefile.in
