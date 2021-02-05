@@ -1,4 +1,4 @@
-#u Outputs
+# Outputs
 *.o
 /protocol2str.c
 sentinel-fwlogs
