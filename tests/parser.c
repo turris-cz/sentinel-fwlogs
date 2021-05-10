@@ -1,7 +1,10 @@
 #include <check.h>
 #include <stdint.h>
-#include "../parser.h"
+#include "../fwlogs/parser.h"
 // Note: data here are real live recorded packets with utility fwrecorder
+
+void unittests_add_suite(Suite*);
+
 
 // This is connection with curl
 const uint8_t ipv4_tcp_80_data[] = {
@@ -92,7 +95,8 @@ START_TEST(ipv4_parse) {
 END_TEST
 
 
-Suite *suite_parser() {
+__attribute__((constructor))
+static void suite() {
 	Suite *suite = suite_create("parser");
 
 	TCase *ipv4 = tcase_create("ipv4");
@@ -102,5 +106,5 @@ Suite *suite_parser() {
 
 	// TODO test IPv6
 
-	return suite;
+	unittests_add_suite(suite);
 }

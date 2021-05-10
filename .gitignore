@@ -1,6 +1,6 @@
 # Outputs
 *.o
-/protocol2str.c
+/fwlogs/protocol2str.c
 sentinel-fwlogs
 fwrecorder
 sentinel-fwlogs-*.tar.gz

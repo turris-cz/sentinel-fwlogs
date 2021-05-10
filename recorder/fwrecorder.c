@@ -12,7 +12,7 @@
 #include <logc.h>
 #include <logc_util.h>
 #include <logc_argp.h>
-#include "fwlog.h"
+#include "../fwlogs/fwlog.h"
 
 APP_LOG(fwrecorder)
 

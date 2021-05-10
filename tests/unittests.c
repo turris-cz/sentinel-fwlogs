@@ -22,12 +22,21 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+static Suite **suites = NULL;
+static size_t suites_len = 0, suites_size = 1;
 
-Suite *suite_parser();
+void unittests_add_suite(Suite *s) {
+	if (suites == NULL || suites_len == suites_size)
+		suites = realloc(suites, (suites_size *= 2) * sizeof *suites);
+	suites[suites_len++] = s;
+}
 
 
 int main(void) {
-	SRunner *runner = srunner_create(suite_parser());
+	SRunner *runner = srunner_create(NULL);
+
+	for (size_t i = 0; i < suites_len; i++)
+		srunner_add_suite(runner, suites[i]);
 
 	char *test_output_tap = getenv("TEST_OUTPUT_TAP");
 	if (test_output_tap && *test_output_tap != '\0')
