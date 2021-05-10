@@ -4,7 +4,8 @@ check_PROGRAMS = %reldir%/unittests
 %canon_reldir%_unittests_SOURCES = \
 	$(fwlogs_sources) \
 	%reldir%/unittests.c \
-	%reldir%/parser.c
+	%reldir%/parse_ipv4.c \ 
+	%reldir%/parse_ipv6.c
 %canon_reldir%_unittests_CFLAGS = \
 	$(sentinel_fwlogs_CFLAGS) \
 	$(CHECK_FLAGS)

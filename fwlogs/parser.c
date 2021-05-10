@@ -20,9 +20,10 @@ size_t max_packet_size() {
 static bool handle_ipv4(const char *payload, size_t payload_size, struct packet_data *dt) {
 	const struct ip *p = (struct ip*)payload;
 
-	dt->proto = protocol2str(p->ip_p);
 	inet_ntop(AF_INET, &p->ip_src, dt->source_ip, sizeof(dt->source_ip));
 	inet_ntop(AF_INET, &p->ip_dst, dt->dest_ip, sizeof(dt->dest_ip));
+
+	dt->proto = protocol2str(p->ip_p);
 
 	const void *phdr = payload + (4 * p->ip_hl);
 	switch (p->ip_p) {
@@ -52,18 +53,40 @@ static bool handle_ipv4(const char *payload, size_t payload_size, struct packet_
 static bool handle_ipv6(const void *payload, size_t payload_size, struct packet_data *dt) {
 	if (payload_size < sizeof(struct ip6_hdr))
 		return false;
-	// TODO what if there is more than one header? We do not go trough them but we
-	// should support them
 	const struct ip6_hdr *p = (struct ip6_hdr*)payload;
-
-	dt->proto = protocol2str(p->ip6_nxt);
 
 	inet_ntop(AF_INET6, &p->ip6_src, dt->source_ip, sizeof(dt->source_ip));
 	inet_ntop(AF_INET6, &p->ip6_dst, dt->dest_ip, sizeof(dt->dest_ip));
-	
-	// TODO for TCP and UDP ports (where are those?)
-	dt->source_port = 0;
-	dt->dest_port = 0;
+
+	// TODO there can be extension headers and only after that the protocol.
+	// We do not read them here. Problem is also that we do not know how much of
+	// the packet size we should get from kernel simply to cover all extension
+	// headers. As initial implementation we just ignore extension headers. We can
+	// add them here once we know how big of an issue this is.
+	dt->proto = protocol2str(p->ip6_nxt);
+
+	const void *phdr = payload + sizeof(struct ip6_hdr);
+	switch (p->ip6_nxt) {
+		case IPPROTO_UDP: {
+			if (payload_size < (sizeof(struct ip6_hdr) + sizeof(struct udphdr)))
+				return false;
+			const struct udphdr *udp = (struct udphdr*)phdr;
+			dt->source_port = ntohs(udp->source);
+			dt->dest_port = ntohs(udp->dest);
+			break;
+		}
+		case IPPROTO_TCP: {
+			if (payload_size < (sizeof(struct ip6_hdr) + sizeof(struct tcphdr)))
+				return false;
+			const struct tcphdr *tcp = (struct tcphdr*)phdr;
+			dt->source_port = ntohs(tcp->source);
+			dt->dest_port = ntohs(tcp->dest);
+			break;
+		}
+		default:
+			dt->source_port = 0;
+			dt->dest_port = 0;
+	}
 	return true;
 }
 
