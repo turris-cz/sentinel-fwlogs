@@ -4,8 +4,10 @@ divert(0)dnl
 
 static const char *protocol2str(unsigned protocol) {
 	switch (protocol) {
-foreach(`PROTO_NAME',`		case IPPROTO_`'PROTO_NAME:
-			return "PROTO_NAME";'
+foreach(`PROTO_NAME',``#'ifdef IPPROTO_`'PROTO_NAME
+		case IPPROTO_`'PROTO_NAME:
+			return "PROTO_NAME";
+#endif'
 ,esyscmd(`sed -n "s/^\([^ \t#]\+\).*$/\1/p" protocols | paste -sd "," | tr -d "\n"'))dnl
 		default:
 			return "Unknown";

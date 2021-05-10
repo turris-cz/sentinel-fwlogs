@@ -28,10 +28,10 @@ COMP		# Compression Header Protocol.
 SCTP		# Stream Control Transmission Protocol.
 UDPLITE		# UDP-Lite protocol.
 MPLS		# MPLS in IP.
-#ETHERNET	# Ethernet-within-IPv6 Encapsulation.
+ETHERNET	# Ethernet-within-IPv6 Encapsulation.
 RAW			# Raw IP packets.
-#MPTCP		# Multipath TCP connection.
-## IPV6 extension headers
+MPTCP		# Multipath TCP connection.
+## IPV6 extension headers (because we are not handling them)
 HOPOPTS		# IPv6 hop-by-hop options
 ROUTING		# IPv6 routing header
 FRAGMENT	# IPv6 fragmentation header
