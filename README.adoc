@@ -27,6 +27,7 @@ This info is submitted to Sentinel-proxy and trough it to Sentinel network.
 * https://github.com/zeromq/libzmq[libczmq]
 * https://github.com/msgpack/msgpack-c[msgpack]
 * https://gitlab.nic.cz/turris/logc[logc]
+* https://gitlab.nic.cz/turris/logc-libs[logc-libs libczmq integration library]
 * http://www.hyperrealm.com/libconfig/libconfig.html[libconfig]
 * https://www.netfilter.org/projects/libnetfilter_log[libnetfilter_log]
 * On non-glibc http://www.lysator.liu.se/~nisse/misc[argp-standalone]

@@ -16,6 +16,7 @@ sentinel_fwlogs_CFLAGS = \
 	${msgpack_CFLAGS} \
 	${libconfig_CFLAGS} \
 	${logc_CFLAGS} \
+	${logc_czmq_CFLAGS} \
 	${libnetfilter_log_CFLAGS} \
 	${CODE_COVERAGE_CFLAGS}
 sentinel_fwlogs_LDADD = \
@@ -23,6 +24,7 @@ sentinel_fwlogs_LDADD = \
 	${msgpack_LIBS} \
 	${libconfig_LIBS} \
 	${logc_LIBS} \
+	${logc_czmq_LIBS} \
 	${libnetfilter_log_LIBS} \
 	${CODE_COVERAGE_LIBS}
 
