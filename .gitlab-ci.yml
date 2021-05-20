@@ -58,7 +58,7 @@ check:
 valgrind:
   extends: .test-check
   script:
-    - make check-valgrind
+    - make check-valgrind-memcheck
 
 lint:
   allow_failure: true
