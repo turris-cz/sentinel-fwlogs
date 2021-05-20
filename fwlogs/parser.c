@@ -17,7 +17,7 @@ size_t max_packet_size() {
 #include "protocol2str.c"
 
 
-static bool handle_ipv4(const char *payload, size_t payload_size, struct packet_data *dt) {
+static bool handle_ipv4(const void *payload, size_t payload_size, struct packet_data *dt) {
 	const struct ip *p = (struct ip*)payload;
 
 	inet_ntop(AF_INET, &p->ip_src, dt->source_ip, sizeof(dt->source_ip));
@@ -107,7 +107,7 @@ bool parse_packet(const void *data, size_t data_size, struct packet_data *packet
 			break;
 		default:
 			DEBUG("Received packet with unknown IP version: %d", p_ip->ip_v);
-			return 0;
+			return false;
 	}
 	// Note: libnetfilter_log provides nflog_get_timestamp. It seems that info is
 	// not either provided by kernel or that it is just implemented invalidly. It

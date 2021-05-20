@@ -6,19 +6,29 @@
 struct sender {
 	char *topic;
 	zsock_t *sock;
+	msgpack_sbuffer sbuf;
 };
 
 
 sender_t sender_new(const char *socket, const char *topic) {
+	zsock_t *sock = zsock_new_push(socket);
+	if (sock == NULL)
+		return NULL;
+
 	sender_t sender = malloc(sizeof *sender);
 	sender->topic = strdup(topic);
-	sender->sock = zsock_new(ZMQ_PUSH);
-	if (zsock_connect(sender->sock, "%s", socket) == 0)
-		return sender;
+	sender->sock = sock;
+	msgpack_sbuffer_init(&sender->sbuf);
 
-	zsock_destroy(&sender->sock);
-	free(sender);
-	return NULL;
+	// We send initial empty welcome message to identify ourself to proxy
+	zmsg_t *msg = zmsg_new();
+	if (zmsg_addstr(msg, topic) || zmsg_send(&msg, sender->sock)) {
+		ERROR("Submit to ZMQ failed for welcome message");
+		zmsg_destroy(&msg);
+		return NULL;
+	}
+
+	return sender;
 }
 
 #define PACK_STR(packer, str) do { \
@@ -27,11 +37,9 @@ sender_t sender_new(const char *socket, const char *topic) {
 	} while(0)
 
 bool sender_send(sender_t sender, struct packet_data *data) {
-	// TODO possibly make it so we use same sbuffer and packer
-	msgpack_sbuffer sbuf;
+	msgpack_sbuffer_clear(&sender->sbuf);
 	msgpack_packer pk;
-	msgpack_sbuffer_init(&sbuf);
-	msgpack_packer_init(&pk, &sbuf, msgpack_sbuffer_write);
+	msgpack_packer_init(&pk, &sender->sbuf, msgpack_sbuffer_write);
 
 	msgpack_pack_map(&pk, 6);
 	PACK_STR(&pk, "ts");
@@ -49,21 +57,18 @@ bool sender_send(sender_t sender, struct packet_data *data) {
 
 	zmsg_t *msg = zmsg_new();
 	if (zmsg_addstr(msg, sender->topic) ||
-			zmsg_addmem(msg, sbuf.data, sbuf.size) ||
+			zmsg_addmem(msg, sender->sbuf.data, sender->sbuf.size) ||
 			zmsg_send(&msg, sender->sock)) {
-		// TODO reconnect? And reason?
 		ERROR("Submit to ZMQ failed");
-		msgpack_sbuffer_destroy(&sbuf);
 		zmsg_destroy(&msg);
 		return false;
 	}
-
-	msgpack_sbuffer_destroy(&sbuf);
 	return true;
 }
 
 void sender_destroy(sender_t sender) {
 	zsock_destroy(&sender->sock);
+	msgpack_sbuffer_destroy(&sender->sbuf);
 	free(sender->topic);
 	free(sender);
 }

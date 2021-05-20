@@ -5,6 +5,8 @@
 
 void unittests_add_suite(Suite*);
 
+static struct packet_data dt;
+
 
 // This is connection with curl
 static const uint8_t tcp_80_data[] = {
@@ -14,7 +16,7 @@ static const uint8_t tcp_80_data[] = {
 	0x32, 0x59, 0x00, 0x00, 0x02, 0x04, 0x05, 0xb4, 0x04, 0x02, 0x08, 0x0a,
 	0xe8, 0x31, 0xa9, 0xca, 0x00, 0x00, 0x00, 0x00, 0x01, 0x03, 0x03, 0x07
 };
-static const size_t tcp_80_len = 60;
+static const size_t tcp_80_len = sizeof(tcp_80_data) / sizeof(*tcp_80_data);
 
 // This is DNS with nslookup
 static const uint8_t udp_53_data[] = {
@@ -24,7 +26,7 @@ static const uint8_t udp_53_data[] = {
 	0x00, 0x00, 0x00, 0x00, 0x03, 0x6e, 0x69, 0x63, 0x02, 0x63, 0x7a, 0x00,
 	0x00, 0x1c, 0x00, 0x01
 };
-static const size_t udp_53_len = 52;
+static const size_t udp_53_len = sizeof(udp_53_data) / sizeof(*udp_53_data);
 
 // This is ping
 static const uint8_t icmp_data[] = {
@@ -36,7 +38,7 @@ static const uint8_t icmp_data[] = {
 	0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b,
 	0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37
 };
-static const size_t icmp_len = 84;
+static const size_t icmp_len = sizeof(icmp_data) / sizeof(*icmp_data);
 
 static struct packets {
 	const uint8_t *data;
@@ -81,8 +83,6 @@ static struct packets {
 
 // This is connection with curl to port 80
 START_TEST(ipv4_parse) {
-	struct packet_data dt;
-
 	ck_assert(parse_packet(packets[_i].data, packets[_i].len, &dt));
 
 	// We ignore time as we can't match it exactly anyway
@@ -95,14 +95,60 @@ START_TEST(ipv4_parse) {
 END_TEST
 
 
+// We are using truncated tcp_80_data in these invalid packets but in general it
+// should not matter what data we pass. The important part is data length.
+static const uint8_t invalid_ip_data[] = {
+	0x45, 0x00, 0x00, 0x3c, 0x92, 0x57, 0x40
+};
+static const size_t invalid_ip_len =
+	sizeof(invalid_ip_data) / sizeof(*invalid_ip_data);
+
+START_TEST(invalid_ip) {
+	ck_assert(!parse_packet(invalid_ip_data, invalid_ip_len, &dt));
+}
+END_TEST
+
+static const uint8_t invalid_tcp_data[] = {
+	0x45, 0x00, 0x00, 0x3c, 0x92, 0x57, 0x40, 0x00, 0x40, 0x06, 0x22, 0x7f,
+	0xc0, 0xa8, 0x02, 0x01, 0xc0, 0xa8, 0x02, 0x94, 0xdb, 0x5c, 0x00, 0x50,
+};
+static const size_t invalid_tcp_len =
+	sizeof(invalid_tcp_data) / sizeof(*invalid_tcp_data);
+
+START_TEST(invalid_tcp) {
+	struct packet_data d;
+	ck_assert(!parse_packet(invalid_tcp_data, invalid_tcp_len, &dt));
+}
+END_TEST
+
+static const uint8_t invalid_ip_version_data[] = {
+	0x35, 0x00, 0x00, 0x3c, 0x92, 0x57, 0x40, 0x00, 0x40, 0x06, 0x22, 0x7f,
+	0xc0, 0xa8, 0x02, 0x01, 0xc0, 0xa8, 0x02, 0x94, 0xdb, 0x5c, 0x00, 0x50,
+};
+static const size_t invalid_ip_version_len =
+	sizeof(invalid_ip_version_data) / sizeof(*invalid_ip_version_data);
+
+START_TEST(invalid_ip_version) {
+	ck_assert(!parse_packet(invalid_ip_version_data, invalid_ip_version_len, &dt));
+}
+END_TEST
+
+
+
 __attribute__((constructor))
 static void suite() {
 	Suite *suite = suite_create("parse ipv4");
 
-	TCase *ipv4 = tcase_create("ipv4");
-	tcase_add_loop_test(ipv4, ipv4_parse, 0,
+	TCase *valid_case = tcase_create("valid");
+	tcase_add_loop_test(valid_case, ipv4_parse, 0,
 		sizeof(packets) / sizeof(struct packets));
-	suite_add_tcase(suite, ipv4);
+	suite_add_tcase(suite, valid_case);
+
+	TCase *invalid_case = tcase_create("invalid");
+	tcase_add_test(invalid_case, invalid_ip);
+	tcase_add_test(invalid_case, invalid_tcp);
+	tcase_add_test(invalid_case, invalid_ip_version);
+	suite_add_tcase(suite, invalid_case);
 
 	unittests_add_suite(suite);
 }
