@@ -58,13 +58,13 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
 
 static void load_config_file() {
 	if (access(conf.config_file, R_OK)) {
-		DEBUG("Skipping config file load (%s)", conf.config_file);
+		debug("Skipping config file load (%s)", conf.config_file);
 		return;
 	}
 	config_t cfg;
 	config_init(&cfg);
 	if(!config_read_file(&cfg, conf.config_file))
-		CRITICAL("Load of config file failed: %s: %s:%d - %s",
+		critical("Load of config file failed: %s: %s:%d - %s",
 				conf.config_file,
 				config_error_file(&cfg),
 				config_error_line(&cfg),

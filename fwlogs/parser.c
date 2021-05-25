@@ -106,7 +106,7 @@ bool parse_packet(const void *data, size_t data_size, struct packet_data *packet
 				goto invalid_size;
 			break;
 		default:
-			DEBUG("Received packet with unknown IP version: %d", p_ip->ip_v);
+			debug("Received packet with unknown IP version: %d", p_ip->ip_v);
 			return false;
 	}
 	// Note: libnetfilter_log provides nflog_get_timestamp. It seems that info is
@@ -117,6 +117,6 @@ bool parse_packet(const void *data, size_t data_size, struct packet_data *packet
 	return true;
 
 invalid_size:
-	DEBUG("Received packet has smaller size than expected IP header. Ignoring");
+	debug("Received packet has smaller size than expected IP header. Ignoring");
 	return false;
 }

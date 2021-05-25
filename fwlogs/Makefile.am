@@ -2,6 +2,7 @@ bin_PROGRAMS += sentinel-fwlogs
 
 fwlogs_sources = \
 	%reldir%/log.c \
+	%reldir%/czmq_log.c \
 	%reldir%/config.c \
 	%reldir%/fwlog.c \
 	%reldir%/parser.c \

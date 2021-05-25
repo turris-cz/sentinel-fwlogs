@@ -14,7 +14,7 @@ AC_GNU_SOURCE
 
 PKG_CHECK_MODULES([czmq], [libczmq])
 PKG_CHECK_MODULES([msgpack], [msgpack])
-PKG_CHECK_MODULES([logc], [logc logc_argp])
+PKG_CHECK_MODULES([logc], [logc >= 0.2.0 logc_argp])
 PKG_CHECK_MODULES([logc_czmq], [libczmq_logc])
 PKG_CHECK_MODULES([libconfig], [libconfig])
 PKG_CHECK_MODULES([libnetfilter_log], [libnetfilter_log])

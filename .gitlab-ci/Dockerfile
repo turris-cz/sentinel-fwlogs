@@ -18,7 +18,7 @@ RUN \
 
 # Compile logc
 RUN \
-  git clone --branch "v0.2.0" "https://gitlab.nic.cz/turris/logc.git" && \
+  git clone --branch "v0.2.1" "https://gitlab.nic.cz/turris/logc.git" && \
   cd logc && \
   ./bootstrap && ./configure --disable-tests --disable-linters --prefix=/usr && \
   make install && \

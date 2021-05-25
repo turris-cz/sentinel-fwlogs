@@ -19,16 +19,16 @@ static int local_callback(struct nflog_g_handle *gh, struct nfgenmsg *nfmsg,
 void fwlog_run(uint16_t log_group, int flags, fwlog_callback callback, void *data) {
 	struct nflog_handle *nflog = nflog_open();
 	if (!nflog)
-		CRITICAL("Unable to open connection to netfilter_log");
+		critical("Unable to open connection to netfilter_log");
 	if (nflog_bind_pf(nflog, PF_INET))
-		CRITICAL("Unable to bind to IPv4 firewall");
+		critical("Unable to bind to IPv4 firewall");
 	if (nflog_bind_pf(nflog, PF_INET6))
-		ERROR("Failed to bind to IPv6 firewall (continuing with IPv4 only)");
+		error("Failed to bind to IPv6 firewall (continuing with IPv4 only)");
 
 	struct nflog_g_handle *nflog_g = nflog_bind_group(nflog, log_group);
 	if (flags & FWLOG_LIMIT)
 		if (nflog_set_mode(nflog_g, NFULNL_COPY_PACKET, max_packet_size()) == -1)
-			CRITICAL("Can't request packet copy mode");
+			critical("Can't request packet copy mode");
 
 	struct local_data local_data = {
 		.data = data,
@@ -40,7 +40,7 @@ void fwlog_run(uint16_t log_group, int flags, fwlog_callback callback, void *dat
 	ssize_t rn;
 	char buf[BUFSIZ];
 	while ((rn = recv(fd, buf, sizeof(buf), 0)) && rn >= 0) {
-		TRACE("Received data from nflog (len=%lu)", rn);
+		trace("Received data from nflog (len=%lu)", rn);
 		nflog_handle_packet(nflog, buf, rn);
 	}
 

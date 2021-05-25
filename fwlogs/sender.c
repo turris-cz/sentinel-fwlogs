@@ -23,7 +23,7 @@ sender_t sender_new(const char *socket, const char *topic) {
 	// We send initial empty welcome message to identify ourself to proxy
 	zmsg_t *msg = zmsg_new();
 	if (zmsg_addstr(msg, topic) || zmsg_send(&msg, sender->sock)) {
-		ERROR("Submit to ZMQ failed for welcome message");
+		error("Submit to ZMQ failed for welcome message");
 		zmsg_destroy(&msg);
 		return NULL;
 	}
@@ -59,7 +59,8 @@ bool sender_send(sender_t sender, struct packet_data *data) {
 	if (zmsg_addstr(msg, sender->topic) ||
 			zmsg_addmem(msg, sender->sbuf.data, sender->sbuf.size) ||
 			zmsg_send(&msg, sender->sock)) {
-		ERROR("Submit to ZMQ failed");
+		error("Submit to ZMQ failed: ts=%ld protocol=%s ip=%s port=%d local_ip=%s local_port=%d",
+			data->ts, data->proto, data->source_ip, data->source_port, data->dest_ip, data->dest_port);
 		zmsg_destroy(&msg);
 		return false;
 	}

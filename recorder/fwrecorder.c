@@ -59,7 +59,7 @@ char *generate_filename() {
 	char *filename = NULL;
 	do {
 		free(filename);
-		STD_IGNORE(asprintf(&filename, "fwrecorder-%d.packet", seq++));
+		std_ignore((asprintf(&filename, "fwrecorder-%d.packet", seq++));
 	} while (!access(filename, F_OK));
 	errno = 0;
 	return filename;
@@ -68,15 +68,15 @@ char *generate_filename() {
 static bool callback(uint8_t *payload, size_t payload_len, void *data) {
 	char *filename = generate_filename();
 	int fd;
-	STD_FATAL(fd = open(filename, O_WRONLY | O_CREAT | O_EXCL, S_IRWXU | S_IRWXG | S_IRWXO));
+	std_fatal(fd = open(filename, O_WRONLY | O_CREAT | O_EXCL, S_IRWXU | S_IRWXG | S_IRWXO));
 	do {
 		ssize_t written = write(fd, payload, payload_len);
 		if (written == -1)
-			CRITICAL("Unable to write payload");
+			critical("Unable to write payload");
 		payload_len -= written;
 	} while (payload_len > 0);
 	close(fd);
-	INFO("Recorded packet: %s", filename);
+	info("Recorded packet: %s", filename);
 
 	free(filename);
 	return true;
