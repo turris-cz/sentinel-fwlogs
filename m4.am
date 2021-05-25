@@ -3,7 +3,7 @@ m4_V_ = $(m4_V_@AM_DEFAULT_V@)
 m4_V_0 = @echo "  M4       $@";
 
 %.c: %.c.m4
-	$(m4_V)m4 '$<' >'$@'
+	$(m4_V)m4 -D SRCDIR='$(srcdir)' '$<' >'$@'
 
 CLEANFILES = $(m4_files)
 

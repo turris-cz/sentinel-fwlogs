@@ -1,11 +1,19 @@
 bin_PROGRAMS += sentinel-fwlogs
+EXTRA_DIST += \
+	protocols \
+	%reldir%/protocol2str.c.m4
 
 fwlogs_sources = \
-	%reldir%/log.c \
-	%reldir%/czmq_log.c \
+	%reldir%/config.h \
 	%reldir%/config.c \
+	%reldir%/czmq_log.c \
+	%reldir%/fwlog.h \
 	%reldir%/fwlog.c \
+	%reldir%/log.h \
+	%reldir%/log.c \
+	%reldir%/parser.h \
 	%reldir%/parser.c \
+	%reldir%/sender.h \
 	%reldir%/sender.c
 
 sentinel_fwlogs_SOURCES = \
@@ -13,6 +21,7 @@ sentinel_fwlogs_SOURCES = \
 	${fwlogs_sources}
 
 sentinel_fwlogs_CFLAGS = \
+	-iquote '$(builddir)/%reldir%' \
 	${czmq_CFLAGS} \
 	${msgpack_CFLAGS} \
 	${libconfig_CFLAGS} \

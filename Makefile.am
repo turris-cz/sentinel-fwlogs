@@ -1,4 +1,5 @@
 bin_PROGRAMS = 
+EXTRA_DIST =
 linted_files =
 
 include fwlogs/Makefile.am
@@ -8,5 +9,11 @@ include recorder/Makefile.am
 endif
 
 
-include $(srcdir)/lint.am
-include $(srcdir)/tests/Makefile.am
+if ENABLE_LINTERS
+include lint.am
+endif
+
+if ENABLE_TESTS
+DISTCHECK_CONFIGURE_FLAGS = --enable-tests
+include tests/Makefile.am
+endif

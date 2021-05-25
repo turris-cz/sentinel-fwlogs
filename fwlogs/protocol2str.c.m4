@@ -8,7 +8,7 @@ foreach(`PROTO_NAME',``#'ifdef IPPROTO_`'PROTO_NAME
 		case IPPROTO_`'PROTO_NAME:
 			return "PROTO_NAME";
 #endif'
-,esyscmd(`sed -n "s/^\([^ \t#]\+\).*$/\1/p" protocols | paste -sd "," | tr -d "\n"'))dnl
+,esyscmd(`sed -n "s/^\([^ \t#]\+\).*$/\1/p" 'SRCDIR`/protocols | paste -sd "," | tr -d "\n"'))dnl
 		default:
 			return "Unknown";
 	};

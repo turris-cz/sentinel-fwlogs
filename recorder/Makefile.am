@@ -7,6 +7,7 @@ fwrecorder_SOURCES = \
 	$(srcdir)/fwlogs/parser.c
 
 fwrecorder_CFLAGS = \
+	-iquote '$(builddir)/fwlogs' \
 	${logc_CFLAGS} \
 	${libnetfilter_log_CFLAGS} \
 	${CODE_COVERAGE_CFLAGS}
