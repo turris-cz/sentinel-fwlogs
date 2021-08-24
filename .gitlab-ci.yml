@@ -1,4 +1,4 @@
-image: registry.labs.nic.cz/turris/sentinel/fwlogs
+image: $CI_REGISTRY_IMAGE
 
 stages:
   - build
