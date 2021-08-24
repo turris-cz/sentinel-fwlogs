@@ -1,5 +1,6 @@
 #include "config.h"
 #include <unistd.h>
+#include <string.h>
 #include <argp.h>
 #include <logc_argp.h>
 #include <libconfig.h>
@@ -12,13 +13,17 @@ static struct config conf = {
 	.nflog_group = DEFAULT_NFLOG_GROUP,
 };
 
+enum {
+	OPT_TOPIC = 256,
+};
+
 static error_t parse_opt(int key, char *arg, struct argp_state *state);
 
 const static struct argp_option argp_options[] = {
 	{"config", 'f', "path",  0, "Path to config file"},
 	{"nflog-group", 'g', "group", 0, "Netfilter log group", 0},
 	{"socket", 's', "socket", 0, "Local socket to push data to Sentinel Proxy", 0},
-	{"topic", 't', "topic", 0, "Topic for communication with Sentinel Proxy", 0},
+	{"topic", OPT_TOPIC, "topic", 0, "Topic for communication with Sentinel Proxy", 0},
 	{NULL}
 };
 
@@ -47,7 +52,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
 		case 's':
 			conf.socket = arg;
 			break;
-		case 't':
+		case OPT_TOPIC:
 			conf.topic = arg;
 			break;
 		default:
@@ -70,6 +75,22 @@ static void load_config_file() {
 				config_error_line(&cfg),
 				config_error_text(&cfg)
 		);
+
+	if (conf.nflog_group != DEFAULT_NFLOG_GROUP) {
+		const config_setting_t *nflog_group = config_lookup(&cfg, "nflog-group");
+		if (nflog_group && config_setting_type(nflog_group) == CONFIG_TYPE_INT)
+			conf.nflog_group = config_setting_get_int(nflog_group);
+	}
+	if (strcmp(conf.socket, DEFAULT_SOCKET_URI)) {
+		const config_setting_t *socket = config_lookup(&cfg, "socket");
+		if (socket && config_setting_type(socket) == CONFIG_TYPE_STRING)
+			conf.socket = config_setting_get_string(socket);
+	}
+	if (strcmp(conf.topic, DEFAULT_TOPIC)) {
+		const config_setting_t *topic = config_lookup(&cfg, "topic");
+		if (topic && config_setting_type(topic) == CONFIG_TYPE_STRING)
+			conf.topic = config_setting_get_string(topic);
+	}
 
 	config_destroy(&cfg);
 }

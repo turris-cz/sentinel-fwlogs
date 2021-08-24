@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - support for welcome message required for newer versions of sentinel-proxy
 - dependency on libczmq\_logc that integrates CZMQ logging with LogC
+- configuration parsing for `nflog_group`, `socket` and `topic`
+
 ### Changed
 - minimal required version of LogC is now 0.2.0
 
