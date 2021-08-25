@@ -38,7 +38,7 @@ dist:
   needs: [build]
   before_script:
       - ./bootstrap
-      - ./configure --enable-tests --enable-valgrind --enable-linters
+      - ./configure --enable-tests --enable-valgrind --enable-linters --enable-fwrecorder
 
 .test-check:
   extends: .test

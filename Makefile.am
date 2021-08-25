@@ -14,6 +14,6 @@ include lint.am
 endif
 
 if ENABLE_TESTS
-DISTCHECK_CONFIGURE_FLAGS = --enable-tests
+DISTCHECK_CONFIGURE_FLAGS = --enable-tests --enable-fwrecorder
 include tests/Makefile.am
 endif

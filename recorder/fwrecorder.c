@@ -14,7 +14,7 @@
 #include <logc_argp.h>
 #include "../fwlogs/fwlog.h"
 
-APP_LOG(fwrecorder)
+APP_LOG(fwrecorder);
 
 static struct {
 	uint16_t nflog_group;
@@ -54,12 +54,12 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
 	return 0;
 }
 
-char *generate_filename() {
+static char *generate_filename() {
 	static unsigned seq = 0;
 	char *filename = NULL;
 	do {
 		free(filename);
-		std_ignore((asprintf(&filename, "fwrecorder-%d.packet", seq++));
+		std_ignore(asprintf(&filename, "fwrecorder-%d.packet", seq++));
 	} while (!access(filename, F_OK));
 	errno = 0;
 	return filename;
