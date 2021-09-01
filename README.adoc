@@ -91,20 +91,20 @@ Sentinel network.
 
 == Running tests
 
-Base64C contains basic tests in directory tests. To run all tests you can just simply
+Sentinel-fwlogs contains basic tests in directory tests. To run all tests you can just simply
 run:
 
 ----
  make check
 ----
 
-You can also run tests with Valgrind:
+You can also run tests in Valgrind:
 
 ----
  make check-valgrind
 ----
 
-To run checks with just one specific Valgrind test such as memtest you can run:
+To run checks with just one specific Valgrind tool such as memcheck you can run:
 
 ----
  make check-valgrind-memcheck
@@ -123,7 +123,7 @@ can run:
  make check-code-coverage
 ----
 
-=== Usage of fwrecoder
+=== Usage of fwrecorder
 
 `fwrecorder` is intended to be used to record real packets for use in tests. Usage
 is pretty much the same as in case of `sentinel-fwlogs` regarding NFLOG.
