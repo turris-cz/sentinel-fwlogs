@@ -1,9 +1,9 @@
-#include <stdlib.h>
-#include <stdio.h>
+#include <stdint.h>
 #include "log.h"
 #include "config.h"
 #include "fwlog.h"
 #include "parser.h"
+#include "sender.h"
 
 
 static void callback(uint8_t *payload, size_t payload_len, void *data) {
