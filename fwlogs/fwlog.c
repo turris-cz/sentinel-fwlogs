@@ -1,6 +1,9 @@
 #include "fwlog.h"
 #include <errno.h>
+#include <sys/socket.h>
 #include <libnetfilter_log/libnetfilter_log.h>
+#include <stdio.h>
+#include "parser.h"
 #include "log.h"
 
 struct local_data {
