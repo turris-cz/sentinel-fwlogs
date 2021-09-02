@@ -1,13 +1,7 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
-#include <argp.h>
-#include <time.h>
-#include <arpa/inet.h>
-#include <libnetfilter_log/libnetfilter_log.h>
 #define DEFLOG log_fwrecorder // logger used in default in logc macros
 #include <logc.h>
 #include <logc_util.h>
