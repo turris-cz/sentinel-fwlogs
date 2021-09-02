@@ -1,10 +1,8 @@
 #include "parser.h"
-#include <strings.h>
 #include <netinet/ip.h>
 #include <netinet/ip6.h>
 #include <netinet/udp.h>
 #include <netinet/tcp.h>
-#include <libnetfilter_log/libnetfilter_log.h>
 #include "log.h"
 
 
@@ -17,6 +15,7 @@ size_t max_packet_size() {
 #include "protocol2str.c"
 
 
+__attribute__((nonnull))
 static bool handle_ipv4(const void *payload, size_t payload_size, struct packet_data *dt) {
 	const struct ip *p = (struct ip*)payload;
 
@@ -50,6 +49,7 @@ static bool handle_ipv4(const void *payload, size_t payload_size, struct packet_
 	return true;
 }
 
+__attribute__((nonnull))
 static bool handle_ipv6(const void *payload, size_t payload_size, struct packet_data *dt) {
 	if (payload_size < sizeof(struct ip6_hdr))
 		return false;
