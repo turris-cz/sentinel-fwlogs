@@ -1,4 +1,5 @@
 #include "fwlog.h"
+#include <errno.h>
 #include <libnetfilter_log/libnetfilter_log.h>
 #include "log.h"
 
@@ -12,8 +13,9 @@ static int local_callback(struct nflog_g_handle *gh, struct nfgenmsg *nfmsg,
 	struct local_data *local_data = data;
 
 	char *payload;
-	int payload_len = nflog_get_payload(nfa, &payload);;
-	return local_data->callback(payload, payload_len, local_data->data) ? 0 : -1;
+	int payload_len = nflog_get_payload(nfa, &payload);
+	local_data->callback(payload, payload_len, local_data->data);
+	return 0;
 }
 
 void fwlog_run(uint16_t log_group, int flags, fwlog_callback callback, void *data) {
@@ -41,8 +43,13 @@ void fwlog_run(uint16_t log_group, int flags, fwlog_callback callback, void *dat
 	char buf[BUFSIZ];
 	while ((rn = recv(fd, buf, sizeof(buf), 0)) && rn >= 0) {
 		trace("Received data from nflog (len=%lu)", rn);
-		nflog_handle_packet(nflog, buf, rn);
+		if (nflog_handle_packet(nflog, buf, rn) < 0) {
+			error("Packet handling failed");
+			break;
+		}
 	}
+	if (rn == -1 && errno != EINTR) // Note: we use interrupt for termination
+		error("Unable to receive data from netfilter");
 
 	nflog_unbind_group(nflog_g);
 	nflog_close(nflog);

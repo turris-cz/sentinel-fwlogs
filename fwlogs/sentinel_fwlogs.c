@@ -6,7 +6,7 @@
 #include "parser.h"
 
 
-static bool callback(uint8_t *payload, size_t payload_len, void *data) {
+static void callback(uint8_t *payload, size_t payload_len, void *data) {
 	sender_t sender = data;
 
 	struct packet_data dt;
@@ -14,10 +14,8 @@ static bool callback(uint8_t *payload, size_t payload_len, void *data) {
 		debug("Proto: %s | Source: %s :%d | Destination: %s :%d | Time: %ld",
 				dt.proto, dt.source_ip, dt.source_port, dt.dest_ip, dt.dest_port,
 				dt.ts);
-		if (!sender_send(sender, &dt))
-			return false;
+		sender_send(sender, &dt); // Ignoring send failure causes only packet info drop
 	}
-	return true;
 }
 
 

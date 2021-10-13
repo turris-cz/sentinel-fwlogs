@@ -65,7 +65,7 @@ static char *generate_filename() {
 	return filename;
 }
 
-static bool callback(uint8_t *payload, size_t payload_len, void *data) {
+static void callback(uint8_t *payload, size_t payload_len, void *data) {
 	char *filename = generate_filename();
 	int fd;
 	std_fatal(fd = open(filename, O_WRONLY | O_CREAT | O_EXCL, S_IRWXU | S_IRWXG | S_IRWXO));
@@ -79,7 +79,6 @@ static bool callback(uint8_t *payload, size_t payload_len, void *data) {
 	info("Recorded packet: %s", filename);
 
 	free(filename);
-	return true;
 }
 
 

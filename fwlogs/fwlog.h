@@ -10,7 +10,7 @@
 #define FWLOG_LIMIT (1 << 0) // Request only max_packet_size() to be copied from kernel
 
 
-typedef bool (*fwlog_callback)(uint8_t *payload, size_t payload_len, void *data);
+typedef void (*fwlog_callback)(uint8_t *payload, size_t payload_len, void *data);
 
 // This function connects to Firewall log and calls callback for every packet
 // received from given log_group.
