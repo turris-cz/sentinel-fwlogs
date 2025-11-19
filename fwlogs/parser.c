@@ -38,6 +38,8 @@ static bool handle_ipv4(const void *payload, size_t payload_size, struct packet_
 			if (payload_size < (sizeof(struct ip) + sizeof(struct tcphdr)))
 				return false;
 			const struct tcphdr *tcp = (struct tcphdr*)phdr;
+			if (!tcp->syn || tcp->ack)
+				return false;
 			dt->source_port = ntohs(tcp->source);
 			dt->dest_port = ntohs(tcp->dest);
 			break;
@@ -79,6 +81,8 @@ static bool handle_ipv6(const void *payload, size_t payload_size, struct packet_
 			if (payload_size < (sizeof(struct ip6_hdr) + sizeof(struct tcphdr)))
 				return false;
 			const struct tcphdr *tcp = (struct tcphdr*)phdr;
+			if (!tcp->syn || tcp->ack)
+				return false;
 			dt->source_port = ntohs(tcp->source);
 			dt->dest_port = ntohs(tcp->dest);
 			break;
@@ -93,17 +97,17 @@ static bool handle_ipv6(const void *payload, size_t payload_size, struct packet_
 
 bool parse_packet(const void *data, size_t data_size, struct packet_data *packet_data) {
 	if (data_size < sizeof(struct ip))
-		goto invalid_size;
+		goto invalid_packet;
 
 	struct ip *p_ip = (struct ip*)data;
 	switch (p_ip->ip_v) {
 		case 4:
 			if (!handle_ipv4(data, data_size, packet_data))
-				goto invalid_size;
+				goto invalid_packet;
 			break;
 		case 6:
 			if (!handle_ipv6(data, data_size, packet_data))
-				goto invalid_size;
+				goto invalid_packet;
 			break;
 		default:
 			debug("Received packet with unknown IP version: %d", p_ip->ip_v);
@@ -116,7 +120,7 @@ bool parse_packet(const void *data, size_t data_size, struct packet_data *packet
 	packet_data->ts = time(NULL);
 	return true;
 
-invalid_size:
-	debug("Received packet has smaller size than expected IP header. Ignoring");
+invalid_packet:
+	debug("Received packet is too small or is not SYN. Ignoring");
 	return false;
 }
